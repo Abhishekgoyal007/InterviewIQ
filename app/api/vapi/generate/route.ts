@@ -5,9 +5,24 @@ import { db } from "@/firebase/admin";
 import { getRandomInterviewCover } from "@/lib/utils";
 
 export async function POST(request: Request) {
-  const { type, role, level, techstack, amount, userid } = await request.json();
-
+  console.log("=== Generate Interview API Called ===");
+  
   try {
+    const body = await request.json();
+    const { type, role, level, techstack, amount, userid } = body;
+    
+    console.log("Request params:", { type, role, level, techstack, amount, userid });
+
+    // Validate required fields
+    if (!role || !type || !level || !techstack || !amount) {
+      console.error("Missing required fields");
+      return Response.json({ 
+        success: false, 
+        error: "Missing required fields" 
+      }, { status: 400 });
+    }
+
+    console.log("Generating questions with Gemini...");
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
       prompt: `Prepare questions for a job interview.
@@ -25,24 +40,36 @@ export async function POST(request: Request) {
     `,
     });
 
+    console.log("Questions generated:", questions);
+
+    const tempId = `interview-${Date.now()}`;
     const interview = {
       role: role,
       type: type,
       level: level,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
-      userId: userid,
+      userId: userid || "anonymous",
       finalized: true,
-      coverImage: getRandomInterviewCover(),
+      coverImage: getRandomInterviewCover(tempId) as string,
       createdAt: new Date().toISOString(),
     };
 
-    await db.collection("interviews").add(interview);
+    console.log("Saving to Firestore...");
+    const docRef = await db.collection("interviews").add(interview);
+    console.log("Interview saved with ID:", docRef.id);
 
-    return Response.json({ success: true }, { status: 200 });
+    return Response.json({ 
+      success: true, 
+      interviewId: docRef.id,
+      message: "Interview generated successfully" 
+    }, { status: 200 });
   } catch (error) {
-    console.error("Error:", error);
-    return Response.json({ success: false, error: error }, { status: 500 });
+    console.error("Error in generate API:", error);
+    return Response.json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : "Unknown error" 
+    }, { status: 500 });
   }
 }
 

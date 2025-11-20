@@ -1,23 +1,40 @@
+"use client";
+
 import { cn } from '@/lib/utils';
-import Image from 'next/image'
+import Image from 'next/image';
+import { useVapi } from '@/hooks/useVapi';
 
-enum CallStatus {
-    INACTIVE = 'INACTIVE',
-    CONNECTING = 'CONNECTING',
-    ACTIVE = 'ACTIVE',
-    FINISHED = 'FINISHED'
-}
-
-const Agent = ({ userName }: AgentProps) => {
-    const callStatus = CallStatus.INACTIVE;
-    const isSpeaking = true; // This would be dynamic in a real application
-    const messages = [
-        'Whats your name? ',
-        'My name is John Doe. nice to meet you!',
-
-    ];
-
-    const lastMessage = messages[messages.length - 1];
+const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId?: string; workflowId?: string }) => {
+    const { callStatus, isSpeaking, messages, start, stop } = useVapi();
+    
+    const lastMessage = messages.length > 0 ? messages[messages.length - 1]?.content : null;
+    
+    const handleStart = async () => {
+        if (workflowId) {
+            // Create assistant with workflow via API, then start
+            try {
+                const response = await fetch('/api/vapi/create-assistant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ workflowId })
+                });
+                
+                const data = await response.json();
+                if (data.success && data.assistantId) {
+                    start(data.assistantId);
+                } else {
+                    console.error('Failed to create assistant:', data.error);
+                }
+            } catch (error) {
+                console.error('Error creating assistant:', error);
+            }
+        } else if (assistantId) {
+            // Start with assistant ID
+            start(assistantId);
+        } else {
+            console.error('No assistant ID or workflow ID provided');
+        }
+    };
 
   return (
     <>
@@ -47,16 +64,20 @@ const Agent = ({ userName }: AgentProps) => {
         )} 
 
         <div className='w-full flex justify-center'>
-            {callStatus !== 'ACTIVE' ? (
-                <button className='relative mt-10 btn-call'>
-                    <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'CONNECTING' && 'hidden')} />
+            {callStatus !== 'active' ? (
+                <button 
+                    className='relative mt-10 btn-call'
+                    onClick={handleStart}
+                    disabled={callStatus === 'loading'}
+                >
+                    <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'loading' && 'hidden')} />
                     <span>
-                        {callStatus === 'INACTIVE' || callStatus === 'FINISHED' ? 'CALL' : '. . . '}
+                        {callStatus === 'inactive' || callStatus === 'ended' ? 'Start Interview' : 'Connecting...'}
                     </span>
                 </button>
             ):(
-                <button className='btn-disconnect'>
-                    End
+                <button className='btn-disconnect' onClick={stop}>
+                    End Interview
                 </button>
             )}
         </div>
