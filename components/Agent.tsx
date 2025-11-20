@@ -5,9 +5,21 @@ import Image from 'next/image';
 import { useVapi } from '@/hooks/useVapi';
 
 const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId?: string; workflowId?: string }) => {
-    const { callStatus, isSpeaking, messages, start, stop } = useVapi();
+    const { callStatus, isSpeaking, messages, elapsedTime, start, stop } = useVapi();
     
     const lastMessage = messages.length > 0 ? messages[messages.length - 1]?.content : null;
+    
+    // Format time as MM:SS
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+    
+    const INTERVIEW_DURATION = 6 * 60; // 6 minutes
+    const remainingTime = Math.max(0, INTERVIEW_DURATION - elapsedTime);
+    const progress = (elapsedTime / INTERVIEW_DURATION) * 100;
+    const isNearEnd = remainingTime <= 60; // Last minute warning
     
     const handleStart = async () => {
         if (workflowId) {
@@ -38,6 +50,34 @@ const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId
 
   return (
     <>
+        {/* Timer Display */}
+        {callStatus === 'active' && (
+            <div className="card p-4 mb-6">
+                <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Time Remaining</span>
+                    <span className={cn(
+                        "text-2xl font-bold",
+                        isNearEnd ? "text-destructive-100 animate-pulse" : "text-primary-200"
+                    )}>
+                        {formatTime(remainingTime)}
+                    </span>
+                </div>
+                {/* Progress Bar */}
+                <div className="w-full bg-dark-300 rounded-full h-2">
+                    <div 
+                        className={cn(
+                            "h-2 rounded-full transition-all duration-1000",
+                            isNearEnd ? "bg-destructive-100" : "bg-primary-200"
+                        )}
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                    Interview will auto-end at 6 minutes
+                </p>
+            </div>
+        )}
+
         <div className='call-view'>
             <div className='card-interviewer'>
                 <div className='avatar'>

@@ -7,10 +7,13 @@ export type CallStatus = "inactive" | "loading" | "active" | "ended";
 
 export function useVapi() {
   const vapiRef = useRef<Vapi | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [callStatus, setCallStatus] = useState<CallStatus>("inactive");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [volumeLevel, setVolumeLevel] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0); // Time in seconds
+  const [isTimeLimitReached, setIsTimeLimitReached] = useState(false);
 
   useEffect(() => {
     // Initialize Vapi on the client side
@@ -29,10 +32,18 @@ export function useVapi() {
     vapi.on("speech-end", () => setIsSpeaking(false));
 
     // Call status events
-    vapi.on("call-start", () => setCallStatus("active"));
+    vapi.on("call-start", () => {
+      setCallStatus("active");
+      setElapsedTime(0);
+      setIsTimeLimitReached(false);
+    });
     vapi.on("call-end", () => {
       setCallStatus("ended");
       setIsSpeaking(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     });
 
     // Message events
@@ -91,6 +102,9 @@ export function useVapi() {
       return;
     }
     setCallStatus("loading");
+    setElapsedTime(0);
+    setIsTimeLimitReached(false);
+    
     try {
       console.log("Starting call with:", { assistantId, assistantOverrides });
       if (assistantId) {
@@ -98,6 +112,27 @@ export function useVapi() {
       } else {
         await vapiRef.current.start(assistantOverrides);
       }
+      
+      // Start timer after call starts successfully
+      timerRef.current = setInterval(() => {
+        setElapsedTime((prev) => {
+          const newTime = prev + 1;
+          // Check if 6 minutes (360 seconds) reached
+          if (newTime >= 360) {
+            setIsTimeLimitReached(true);
+            // Auto-end call at 6 minutes
+            if (vapiRef.current) {
+              vapiRef.current.stop();
+            }
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+            }
+          }
+          return newTime;
+        });
+      }, 1000);
+      
     } catch (error) {
       console.error("Error starting call:", error);
       console.error("Error details:", {
@@ -112,6 +147,10 @@ export function useVapi() {
     if (!vapiRef.current) return;
     vapiRef.current.stop();
     setCallStatus("inactive");
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,6 +164,8 @@ export function useVapi() {
     isSpeaking,
     messages,
     volumeLevel,
+    elapsedTime,
+    isTimeLimitReached,
     start,
     stop,
     send,
