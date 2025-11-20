@@ -36,6 +36,14 @@ interface User {
   name: string;
   email: string;
   id: string;
+  phone?: string;
+  bio?: string;
+  linkedIn?: string;
+  github?: string;
+  resumeUrl?: string;
+  resumeUpdatedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface InterviewCardProps {
