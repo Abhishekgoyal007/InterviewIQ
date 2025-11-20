@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       level: level,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
-      userId: userid || "anonymous",
+      userid: userid || "anonymous",
       finalized: true,
       coverImage: getRandomInterviewCover(tempId) as string,
       createdAt: new Date().toISOString(),

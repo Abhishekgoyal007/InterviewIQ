@@ -2,7 +2,7 @@ import { getCurrentUser } from '@/lib/actions/auth.actions';
 import { redirect } from 'next/navigation';
 import ProfileForm from '@/components/ProfileForm';
 import { db } from '@/firebase/admin';
-import InterviewCard from '@/components/InterviewCard';
+import FeedbackCard from '@/components/FeedbackCard';
 
 const ProfilePage = async () => {
   const user = await getCurrentUser();
@@ -54,33 +54,12 @@ const ProfilePage = async () => {
         {completedInterviews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {completedInterviews.map((interview) => (
-              <div key={interview.interviewId} className="relative">
-                <InterviewCard 
-                  interviewId={interview.interviewId}
-                  userId={interview.userId}
-                  role={interview.role}
-                  type={interview.type}
-                  techstack={interview.techstack}
-                  createdAt={interview.createdAt}
-                />
-                <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-                  {interview.feedback && (
-                    <a 
-                      href={`/interview/${interview.interviewId}/feedback`}
-                      className="bg-green-600 text-white text-xs px-3 py-1.5 rounded-full hover:bg-green-700 transition-colors text-center"
-                    >
-                      View Feedback
-                    </a>
-                  )}
-                  {interview.status && (
-                    <span className={`text-white text-xs px-3 py-1.5 rounded-full text-center ${
-                      interview.status === 'completed' ? 'bg-blue-600' : 'bg-gray-600'
-                    }`}>
-                      {interview.status}
-                    </span>
-                  )}
-                </div>
-              </div>
+              <FeedbackCard
+                key={interview.interviewId}
+                interviewId={interview.interviewId}
+                createdAt={interview.feedbackGeneratedAt || interview.createdAt}
+                initialTitle={`${interview.role} Interview`}
+              />
             ))}
           </div>
         ) : (

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
+import { createInterview } from '@/lib/actions/interview.actions';
 
 export default function CreateInterviewButton() {
   const [loading, setLoading] = useState(false);
@@ -11,24 +12,12 @@ export default function CreateInterviewButton() {
   const handleCreateInterview = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/vapi/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'Technical',
-          role: 'Full Stack Developer',
-          level: 'Mid-level',
-          techstack: 'React, Node.js, TypeScript',
-          amount: 5
-        })
-      });
-
-      const data = await response.json();
+      const result = await createInterview();
       
-      if (data.success && data.interviewId) {
-        router.push(`/interview/${data.interviewId}`);
+      if (result.success && result.interviewId) {
+        router.push(`/interview/${result.interviewId}`);
       } else {
-        alert('Failed to create interview: ' + (data.message || 'Unknown error'));
+        alert('Failed to create interview: ' + (result.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error creating interview:', error);
