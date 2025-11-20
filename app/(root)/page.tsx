@@ -11,70 +11,94 @@ const page = async () => {
   const user = await getCurrentUser();
 
   return (
-    <>
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className='card-cta mt-12'>
-        <div className='flex flex-col gap-6 max-w-lg'>
-          <h1 className='text-4xl font-bold'>
-            Master Your Interview Skills with AI
-          </h1>
-          <p className='text-lg text-light-100'>
-            Practice real interview scenarios with our AI-powered interviewer. Get instant feedback on technical skills, behavioral responses, and communication.
-          </p>
-          <div className='flex gap-4 max-sm:flex-col'>
-            {user ? (
-              <CreateInterviewButton />
-            ) : (
-              <Button asChild className='btn-primary'>
-                <Link href="/sign-in">
-                  Try Free Interview
-                </Link>
-              </Button>
-            )}
-            {!user && (
-              <Button asChild className='btn-secondary'>
-                <Link href="/sign-up">
-                  Sign Up Free
-                </Link>
-              </Button>
-            )}
+      <section className='relative overflow-hidden py-20 px-4'>
+        <div className='absolute inset-0 bg-gradient-to-br from-primary-100/10 via-transparent to-purple-500/10 pointer-events-none'></div>
+        <div className='container mx-auto max-w-6xl relative z-10'>
+          <div className='flex flex-col lg:flex-row items-center gap-12'>
+            <div className='flex-1 text-center lg:text-left'>
+              <h1 className='text-5xl lg:text-6xl font-bold mb-6 leading-tight'>
+                Ace Your Next
+                <span className='block text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-purple-500'>
+                  Job Interview
+                </span>
+              </h1>
+              <p className='text-xl text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0'>
+                Practice with AI, get instant feedback, and land your dream job. Improve your technical and behavioral skills in just 6 minutes.
+              </p>
+              <div className='flex gap-4 justify-center lg:justify-start flex-wrap'>
+                {user ? (
+                  <CreateInterviewButton />
+                ) : (
+                  <>
+                    <Button asChild className='btn-primary text-lg px-8 py-6'>
+                      <Link href="/sign-in">
+                        Start Free Practice
+                      </Link>
+                    </Button>
+                    <Button asChild className='btn-secondary text-lg px-8 py-6'>
+                      <Link href="/sign-up">
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className='flex-1 relative'>
+              <div className='relative w-full max-w-md mx-auto'>
+                <div className='absolute inset-0 bg-gradient-to-br from-primary-100 to-purple-500 rounded-3xl blur-3xl opacity-20'></div>
+                <Image 
+                  src="/robot.png" 
+                  alt="AI Interview Assistant" 
+                  width={500} 
+                  height={500} 
+                  className='relative z-10 drop-shadow-2xl'
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <Image src="/robot.png" alt="AI Interview Assistant" width={400} height={400} className='max-sm:hidden'/>
       </section>
 
       {/* Features Section */}
-      <section className='mt-20'>
-        <h2 className='text-center mb-12'>Why Choose InterviewIQ?</h2>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          <div className='card p-6 text-center'>
-            <div className='w-16 h-16 bg-primary-200 rounded-full flex items-center justify-center mx-auto mb-4'>
-              <Image src="/star.svg" alt="AI Powered" width={32} height={32} />
-            </div>
-            <h3 className='text-xl font-semibold mb-3'>AI-Powered Interviews</h3>
-            <p className='text-light-100'>
-              Practice with an intelligent AI that adapts to your responses and asks relevant follow-up questions.
-            </p>
+      <section className='py-20 px-4'>
+        <div className='container mx-auto max-w-6xl'>
+          <div className='text-center mb-16'>
+            <h2 className='text-4xl font-bold mb-4'>Why Choose InterviewIQ?</h2>
+            <p className='text-gray-400 text-lg'>Everything you need to ace your interviews</p>
           </div>
-
-          <div className='card p-6 text-center'>
-            <div className='w-16 h-16 bg-primary-200 rounded-full flex items-center justify-center mx-auto mb-4'>
-              <Image src="/calendar.svg" alt="Instant Feedback" width={32} height={32} />
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+            <div className='group bg-dark-300 border border-dark-400 rounded-2xl p-8 hover:border-primary-100 transition-all hover:scale-105'>
+              <div className='w-14 h-14 bg-gradient-to-br from-primary-100 to-purple-500 rounded-xl flex items-center justify-center mb-6'>
+                <Image src="/star.svg" alt="AI Powered" width={28} height={28} />
+              </div>
+              <h3 className='text-xl font-bold mb-3 text-white'>AI-Powered Interviews</h3>
+              <p className='text-gray-400 leading-relaxed'>
+                Practice with an intelligent AI that adapts to your responses and asks relevant follow-up questions.
+              </p>
             </div>
-            <h3 className='text-xl font-semibold mb-3'>Instant Feedback</h3>
-            <p className='text-light-100'>
-              Receive detailed scores on technical and behavioral aspects with actionable improvement suggestions.
-            </p>
-          </div>
 
-          <div className='card p-6 text-center'>
-            <div className='w-16 h-16 bg-primary-200 rounded-full flex items-center justify-center mx-auto mb-4'>
-              <Image src="/tech.svg" alt="Any Tech Stack" width={32} height={32} />
+            <div className='group bg-dark-300 border border-dark-400 rounded-2xl p-8 hover:border-primary-100 transition-all hover:scale-105'>
+              <div className='w-14 h-14 bg-gradient-to-br from-primary-100 to-purple-500 rounded-xl flex items-center justify-center mb-6'>
+                <Image src="/calendar.svg" alt="Instant Feedback" width={28} height={28} />
+              </div>
+              <h3 className='text-xl font-bold mb-3 text-white'>Instant Feedback</h3>
+              <p className='text-gray-400 leading-relaxed'>
+                Receive detailed scores on technical and behavioral aspects with actionable improvement suggestions.
+              </p>
             </div>
-            <h3 className='text-xl font-semibold mb-3'>Any Tech Stack</h3>
-            <p className='text-light-100'>
-              Practice for roles across any technology - React, Python, Java, or custom requirements.
-            </p>
+
+            <div className='group bg-dark-300 border border-dark-400 rounded-2xl p-8 hover:border-primary-100 transition-all hover:scale-105'>
+              <div className='w-14 h-14 bg-gradient-to-br from-primary-100 to-purple-500 rounded-xl flex items-center justify-center mb-6'>
+                <Image src="/tech.svg" alt="Any Tech Stack" width={28} height={28} />
+              </div>
+              <h3 className='text-xl font-bold mb-3 text-white'>Any Tech Stack</h3>
+              <p className='text-gray-400 leading-relaxed'>
+                Practice for roles across any technology - React, Python, Java, or custom requirements.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -149,18 +173,24 @@ const page = async () => {
       )}
 
       {/* CTA Section */}
-      <section className='mt-20 text-center card p-12'>
-        <h2 className='mb-4'>Ready to Ace Your Next Interview?</h2>
-        <p className='text-light-100 mb-8 max-w-2xl mx-auto'>
-          Join thousands of candidates who have improved their interview skills with InterviewIQ. Start practicing today!
-        </p>
-        <Button asChild className='btn-primary'>
-          <Link href="/interview">
-            Start Your First Interview
-          </Link>
-        </Button>
+      <section className='mt-20 py-16 px-4'>
+        <div className='container mx-auto max-w-4xl text-center bg-gradient-to-br from-primary-100 to-purple-500 rounded-3xl p-12'>
+          <h2 className='text-3xl font-bold mb-4 text-white'>Ready to Ace Your Next Interview?</h2>
+          <p className='text-white/90 mb-8 text-lg'>
+            Join thousands of candidates improving their skills with AI-powered practice
+          </p>
+          {user ? (
+            <CreateInterviewButton />
+          ) : (
+            <Button asChild className='bg-white text-primary-100 hover:bg-gray-100 text-lg px-8 py-6'>
+              <Link href="/sign-in">
+                Get Started Free
+              </Link>
+            </Button>
+          )}
+        </div>
       </section>
-    </>
+    </div>
   )
 }
 
