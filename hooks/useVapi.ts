@@ -37,7 +37,8 @@ export function useVapi() {
       setElapsedTime(0);
       setIsTimeLimitReached(false);
     });
-    vapi.on("call-end", () => {
+    vapi.on("call-end", (callData: any) => {
+      console.log("Call ended with data:", callData);
       setCallStatus("ended");
       setIsSpeaking(false);
       if (timerRef.current) {

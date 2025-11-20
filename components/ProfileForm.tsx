@@ -95,7 +95,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
         <div>
           <label className="block text-sm font-medium mb-2">Bio</label>
           <textarea
-            className="w-full min-h-24 bg-dark-200 rounded-full px-5 py-3 border border-input"
+            className="w-full min-h-24 bg-dark-200 px-5 py-3 border border-input"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             placeholder="Tell us about yourself..."

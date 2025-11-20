@@ -1,7 +1,6 @@
 'use server';
 
-import { db } from '@/firebase/admin';
-import { getStorage } from 'firebase-admin/storage';
+import { db, storage } from '@/firebase/admin';
 import { getCurrentUser } from './auth.actions';
 
 export async function updateUserProfile(userId: string, data: {
@@ -31,7 +30,7 @@ export async function uploadResume(userId: string, file: File) {
     const buffer = Buffer.from(bytes);
 
     // Get Firebase Storage bucket
-    const bucket = getStorage().bucket();
+    const bucket = storage.bucket();
     const fileName = `resumes/${userId}/${Date.now()}-${file.name}`;
     const fileUpload = bucket.file(fileName);
 
@@ -70,7 +69,7 @@ export async function deleteResume(userId: string) {
 
     // Delete from storage
     if (user.resumeUrl) {
-      const bucket = getStorage().bucket();
+      const bucket = storage.bucket();
       const fileName = user.resumeUrl.split(`${bucket.name}/`)[1];
       await bucket.file(fileName).delete();
     }

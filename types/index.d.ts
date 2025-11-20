@@ -23,6 +23,18 @@ interface Interview {
   userId: string;
   type: string;
   finalized: boolean;
+  feedback?: {
+    behavioral: number;
+    technical: number;
+    strengths: string[];
+    weaknesses: string[];
+    suggestions: string[];
+    resources: string[];
+    analyzed: boolean;
+    analyzedAt: string;
+  };
+  transcript?: string;
+  updatedAt?: string;
 }
 
 interface CreateFeedbackParams {

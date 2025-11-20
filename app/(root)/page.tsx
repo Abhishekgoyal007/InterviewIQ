@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { getCurrentUser } from '@/lib/actions/auth.actions'
+import CreateInterviewButton from '@/components/CreateInterviewButton'
 
 const page = async () => {
   const user = await getCurrentUser();
@@ -21,11 +22,15 @@ const page = async () => {
             Practice real interview scenarios with our AI-powered interviewer. Get instant feedback on technical skills, behavioral responses, and communication.
           </p>
           <div className='flex gap-4 max-sm:flex-col'>
-            <Button asChild className='btn-primary'>
-              <Link href="/interview">
-                {user ? 'Start Practice Interview' : 'Try Free Interview'}
-              </Link>
-            </Button>
+            {user ? (
+              <CreateInterviewButton />
+            ) : (
+              <Button asChild className='btn-primary'>
+                <Link href="/sign-in">
+                  Try Free Interview
+                </Link>
+              </Button>
+            )}
             {!user && (
               <Button asChild className='btn-secondary'>
                 <Link href="/sign-up">

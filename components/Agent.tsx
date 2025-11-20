@@ -3,11 +3,50 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useVapi } from '@/hooks/useVapi';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
-const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId?: string; workflowId?: string }) => {
+const Agent = ({ userName, assistantId, workflowId, interviewId }: AgentProps & { assistantId?: string; workflowId?: string; interviewId?: string }) => {
     const { callStatus, isSpeaking, messages, elapsedTime, start, stop } = useVapi();
+    const router = useRouter();
+    const feedbackSent = useRef(false);
     
     const lastMessage = messages.length > 0 ? messages[messages.length - 1]?.content : null;
+    
+    // Handle call end - send feedback analysis
+    useEffect(() => {
+        if (callStatus === 'ended' && interviewId && !feedbackSent.current && messages.length > 0) {
+            feedbackSent.current = true;
+            
+            console.log('Call ended, generating feedback for interview:', interviewId);
+            console.log('Messages collected:', messages.length);
+            
+            // Send for feedback analysis
+            fetch('/api/vapi/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    interviewId, 
+                    messages 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Feedback generated successfully, redirecting...');
+                    // Redirect to feedback page
+                    router.push(`/interview/${interviewId}/feedback`);
+                } else {
+                    console.error('Feedback generation failed:', data.message);
+                    alert('Failed to generate feedback: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error generating feedback:', error);
+                alert('Error generating feedback. Check console for details.');
+            });
+        }
+    }, [callStatus, interviewId, messages, router]);
     
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
