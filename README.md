@@ -102,51 +102,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📁 Project Structure
-
-```
-aiinterview/
-├── app/
-│   ├── (auth)/              # Authentication pages
-│   │   ├── sign-in/
-│   │   └── sign-up/
-│   ├── (root)/              # Main application routes
-│   │   ├── interview/       # Interview pages
-│   │   │   └── [id]/
-│   │   │       ├── page.tsx
-│   │   │       └── feedback/
-│   │   ├── profile/         # User profile
-│   │   └── page.tsx         # Landing page
-│   ├── api/                 # API routes
-│   │   ├── vapi/           # Vapi endpoints
-│   │   │   ├── create-assistant/
-│   │   │   ├── feedback/
-│   │   │   └── generate/
-│   │   └── interviews/     # Interview CRUD
-│   ├── globals.css         # Global styles
-│   └── layout.tsx          # Root layout
-├── components/             # React components
-│   ├── Agent.tsx          # Interview voice interface
-│   ├── FeedbackCard.tsx   # Interview history card
-│   ├── FeedbackDisplay.tsx # Feedback results page
-│   ├── ProfileForm.tsx    # User profile form
-│   ├── Header.tsx         # Navigation header
-│   └── ui/               # Reusable UI components
-├── hooks/
-│   └── useVapi.ts        # Vapi SDK hook
-├── lib/
-│   ├── actions/          # Server actions
-│   │   ├── auth.actions.ts
-│   │   ├── interview.actions.ts
-│   │   └── profile.actions.ts
-│   └── utils.ts          # Utility functions
-├── firebase/
-│   └── admin.ts          # Firebase Admin config
-└── types/
-    ├── index.d.ts        # Global types
-    └── vapi.d.ts         # Vapi types
-```
-
 ## 🔑 Key Features Explained
 
 ### Interview Flow
@@ -193,54 +148,9 @@ service cloud.firestore {
 }
 ```
 
-## 🌐 Deployment
-
-### Deploy to Vercel
-
-1. Push your code to GitHub
-2. Import project in Vercel
-3. Add all environment variables
-4. Deploy
-
-Make sure to add these environment variables in Vercel:
-- `FIREBASE_PROJECT_ID`
-- `FIREBASE_CLIENT_EMAIL`
-- `FIREBASE_PRIVATE_KEY`
-- `FIREBASE_STORAGE_BUCKET`
-- `VAPI_PRIVATE_KEY`
-- `NEXT_PUBLIC_VAPI_WEB_TOKEN`
-- `GOOGLE_GENERATIVE_AI_API_KEY`
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Abhishek Goyal**
-- GitHub: [@Abhishekgoyal007](https://github.com/Abhishekgoyal007)
-
-## 🙏 Acknowledgments
-
-- [Vapi AI](https://vapi.ai) for voice AI technology
-- [Google Gemini](https://ai.google.dev) for AI-powered content generation
-- [11Labs](https://11labs.io) for voice synthesis
-- [Firebase](https://firebase.google.com) for backend services
-- [Vercel](https://vercel.com) for hosting
-
 ## 📧 Support
 
-For support, email your-email@example.com or open an issue in the GitHub repository.
+For support, email abhishekgoyal1311@gmail.com or open an issue in the GitHub repository.
 
 ---
 
