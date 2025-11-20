@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         },
         voice: {
           provider: "11labs",
-          voiceId: "pNInz6obpgDQGcFmaJgB", // Adam - professional male voice
+          voiceId: "21m00Tcm4TlvDq8ikWAM", // Josh - enthusiastic, confident male voice
           stability: 0.4,
           similarityBoost: 0.75,
           style: 0.3,

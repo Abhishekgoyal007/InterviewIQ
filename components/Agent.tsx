@@ -18,8 +18,6 @@ const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId
     
     const INTERVIEW_DURATION = 6 * 60; // 6 minutes
     const remainingTime = Math.max(0, INTERVIEW_DURATION - elapsedTime);
-    const progress = (elapsedTime / INTERVIEW_DURATION) * 100;
-    const isNearEnd = remainingTime <= 60; // Last minute warning
     
     const handleStart = async () => {
         if (workflowId) {
@@ -50,34 +48,6 @@ const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId
 
   return (
     <>
-        {/* Timer Display */}
-        {callStatus === 'active' && (
-            <div className="card p-4 mb-6">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Time Remaining</span>
-                    <span className={cn(
-                        "text-2xl font-bold",
-                        isNearEnd ? "text-destructive-100 animate-pulse" : "text-primary-200"
-                    )}>
-                        {formatTime(remainingTime)}
-                    </span>
-                </div>
-                {/* Progress Bar */}
-                <div className="w-full bg-dark-300 rounded-full h-2">
-                    <div 
-                        className={cn(
-                            "h-2 rounded-full transition-all duration-1000",
-                            isNearEnd ? "bg-destructive-100" : "bg-primary-200"
-                        )}
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                    Interview will auto-end at 6 minutes
-                </p>
-            </div>
-        )}
-
         <div className='call-view'>
             <div className='card-interviewer'>
                 <div className='avatar'>
@@ -116,9 +86,17 @@ const Agent = ({ userName, assistantId, workflowId }: AgentProps & { assistantId
                     </span>
                 </button>
             ):(
-                <button className='btn-disconnect' onClick={stop}>
+                <div className="flex items-center mt-5">
+                <button
+                    onClick={stop}
+                    className="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium shadow-sm"
+                >
                     End Interview
                 </button>
+                <div className="ml-4 flex items-center text-gray-700 text-lg font-semibold">
+                    {formatTime(remainingTime)}
+                </div>
+                </div>
             )}
         </div>
     </>
