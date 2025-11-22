@@ -5,7 +5,6 @@
 InterviewIQ is an intelligent interview practice platform that uses AI voice assistants to conduct realistic mock interviews. Get instant feedback on your technical and behavioral skills, and track your progress over time.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://your-vercel-url.vercel.app)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## ✨ Features
 
